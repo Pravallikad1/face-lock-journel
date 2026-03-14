@@ -1,0 +1,42 @@
+const video = document.getElementById("video")
+const journal = document.getElementById("journal")
+const statusText = document.getElementById("status")
+
+Promise.all([
+faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/models')
+]).then(startVideo)
+
+function startVideo(){
+
+navigator.mediaDevices.getUserMedia({video:true})
+
+.then(stream=>{
+video.srcObject = stream
+})
+
+.catch(err=>{
+console.log(err)
+})
+
+}
+
+video.addEventListener("play",()=>{
+
+setInterval(async()=>{
+
+const detection = await faceapi.detectSingleFace(
+video,
+new faceapi.TinyFaceDetectorOptions()
+)
+
+if(detection){
+
+statusText.innerText="Face Detected ✅"
+
+journal.style.display="block"
+
+}
+
+},1000)
+
+})
